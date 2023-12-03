@@ -9,33 +9,36 @@ let pushEgal = false
 // on a une chaine de caracteres string avec des nombres et des opération, on va reperer la position de chaque opération.
 function resultat() {
 
-    pushEgal = true;
+    pushEgal = true; // on précise qu'on a appuyer sur égal, car ca a une influence sur la touche AC
     let screenSplit = Array.from(screen); //  .split transforme le string en une liste, mais ATTENTION, c'est un objet , par un array
-    // il vaut mieux visiblement utiliser Array.from
+    // il vaut mieux visiblement utiliser Array.from (quoique, ça renvoie aussi un objet et non un array)
 
     //console.log(typeof(screenSplit)) object, la propriété lenght ne fonctionne pas
     let i = 0  // on modifie le tableau pour assembler les nombres ensemble
     while (i < Object.keys(screenSplit).length) {
         if (isNaN(screenSplit[i]) == false && isNaN(screenSplit[i + 1]) == false) { // si deux éléments se suivant sont des nombres
-            screenSplit[i] = Number(screenSplit[i] + screenSplit[i + 1]); // on additionne ces deux string, ne pas confondre split  splice et slice!!
+            screenSplit[i] = (screenSplit[i] + screenSplit[i + 1]); // on additionne ces deux string
             screenSplit.splice(i + 1, 1); // on supprime le second élement
         }
         else { i += 1 }
     }
     console.log(screenSplit)
-    // Avant tout, priorité aux chiffres décimaux
 
+function efface() { screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+}
+    // Avant tout, priorité aux chiffres décimaux
     i = 1
     while (i < Object.keys(screenSplit).length) {
         if (screenSplit[i] == "," || screenSplit[i] == ".") {
-            screenSplit[i] = screenSplit[i - 1] + "." + screenSplit[i + 1];// on remplace par l'opération
-            screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+            screenSplit[i] = Number(screenSplit[i - 1] + "." + screenSplit[i + 1]);// on remplace par l'opération et on transforme en nombre
+            efface(); // on supprime les deux nombres
             i -= 1
         }
 
 
         else { i += 1 }
     }
+    console.log(screenSplit)
 
     //Maintenant, on va transformer les string nombre en nombre
     for (let i = 0; i < Object.keys(screenSplit).length; i++) {
@@ -43,24 +46,24 @@ function resultat() {
     }
 
 
-    // Maintenant, il faut donner la priorité aux divisions et multiplications, et au %
+    // Maintenant, il faut donner la priorité aux divisions, multiplications, et au %
 
     i = 1
     while (i < Object.keys(screenSplit).length) {
         if (screenSplit[i] == "/") {
-            screenSplit[i] = screenSplit[i - 1] / screenSplit[i + 1];// on remplace par l'opération
-            screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+            screenSplit[i] = screenSplit[i - 1] / screenSplit[i + 1];// on remplace par l'opération, ca transforme automatiquement en nombre 
+            efface(); // on supprime les deux nombres
             i -= 1
         }
         else if (screenSplit[i] == "*") {
             screenSplit[i] = screenSplit[i - 1] * screenSplit[i + 1];// on remplace par l'opération
-            screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+            efface(); // on supprime les deux nombres
             i -= 1
         }
 
         else if (screenSplit[i] == "%") {
             screenSplit[i] = screenSplit[i + 1] / 100 * screenSplit[i - 1];// on remplace par l'opération
-            screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+            efface(); // on supprime les deux nombres
             i -= 1
 
         }
@@ -72,13 +75,13 @@ function resultat() {
     i = 1
     while (i < Object.keys(screenSplit).length) {
         if (screenSplit[i] == "+") {
-            screenSplit[i] = Number(screenSplit[i - 1]) + Number(screenSplit[i + 1]);// on remplace par l'opération
-            screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+            screenSplit[i] = (screenSplit[i - 1]) + (screenSplit[i + 1]);// on remplace par l'opération
+            efface(); // on supprime les deux nombres
             i -= 1
         }
         else if (screenSplit[i] == "-") {
             screenSplit[i] = screenSplit[i - 1] - screenSplit[i + 1];// on remplace par l'opération
-            screenSplit.splice(i - 1, 1); screenSplit.splice(i, 1); // on supprime les deux nombres
+            efface(); // on supprime les deux nombres
             i -= 1
         }
 
